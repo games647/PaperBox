@@ -1,0 +1,8 @@
+# Cache files from the https://github.com/nektos/act container
+
+# JIB Cli tool
+jib-*.zip
+jib-*
+
+# Workflow cache
+workflow/*
