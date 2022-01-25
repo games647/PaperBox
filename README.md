@@ -15,6 +15,28 @@ because libraries are less likely to be updated than the source code. In the end
 * No fat jar: With Jib it's unnecessary to shade/shadow libraries into a big jar file. The classpath inside the image
   will find all necessary libraries.
 
+## Differences to other OCI/Container approaches
+
+Besides, utilizing a more optimized layer layout:
+
+### itzg/minecraft-server
+
+The project at [itzg/minecraft-server](https://hub.docker.com/r/itzg/minecraft-server) downloads the server software
+at container startup. This increases the container startup time. Containers should be ready to start directly.
+Furthermore, it downloads a file from a foreign source (by default: https://getbukkit.org/). In a very strict setup,
+this affects the security policies. First, it requires allowing an otherwise unnecessary outgoing connection
+(e.g. allow list network policy) and trusting a foreign source. There no verification process involved, that would
+detect changed server jar on the upstream server (like checksum to expect a certain build). This would make it also
+harder to debug it, because they are not reproducible.
+
+### FelixKlauke/paperspigot-docker
+
+[FelixKlauke/paperspigot-docker](https://github.com/FelixKlauke/paperspigot-docker) builds the Paper server software
+and provides the server jar in the image. This means that there no download or patching process involved when the
+container is created and started. However, this means that we are distributing a modified server software, which is
+against the GPL. Latter required us to create solutions like [BuildTools](https://www.spigotmc.org/wiki/buildtools/) or
+[paperclip](https://github.com/PaperMC/Paperclip) to build server on our own or binary patch it.
+
 ## Tools used
 
 ### nektos/act
