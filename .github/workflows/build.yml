@@ -14,6 +14,16 @@ on:
     branches:
       - main
 
+env:
+  JDK_DISTRIBUTION: 'adopt'
+  JAVA_VERSION: 17
+
+  JIB_VERSION: '0.9.0'
+  JIB_CLI_DOWNLOAD: "https://github.com/GoogleContainerTools/jib/releases/download/v${{ env.JIB_VERSION }}-cli/jib-jre-${{ env.JIB_VERSION }}.zip"
+  JIB_CHECKSUM: 'c0f47017f1218a223f51228cc69fe9d7793e600d8a05b11e4dbdba0dee6bfc11'
+
+  BASE_IMAGE: 'openjdk:17'
+
 jobs:
   # job id
   build_and_test:
@@ -25,20 +35,36 @@ jobs:
     steps:
       # Pull changes
       - name: Checkout Paper
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
         with:
-            repository: PaperMC/Paper
-            path: Paper
-            ref: master
-#            token: ${{ secrets.UBERSHMEKEL_ALT_TOKEN }}
+          repository: PaperMC/Paper
+          path: Paper
+          ref: master
 
-        # Setup Java
+      # Cache only if the action is not run locally using act
+      # https://github.com/nektos/act/issues/285#issuecomment-987550101
       - name: Set up JDK
-        uses: actions/setup-java@v2.3.0
+        uses: actions/setup-java@v2.5.0
+        if: ${{ !env.ACT }}
         with:
-          distribution: 'adopt'
-          # Use Java 16, because it's minimum required version by Geyser
-          java-version: 17
+          distribution: ${{ env.JDK_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: 'gradle'
+
+      # Setup Java
+      - name: Set up JDK
+        uses: actions/setup-java@v2.5.0
+        if: ${{ env.ACT }}
+        with:
+          distribution: ${{ env.JDK_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Download JIB
+        run: |
+          wget "$JIB_CLI_DOWNLOAD" --output-document jib-cli.zip
+          # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
+          # and in transport modifications
+          echo "$JIB_CHECKSUM jib-cli.zip" | sha256sum -c -
 
       - name: Patch and build
         run: |
@@ -46,4 +72,8 @@ jobs:
             git config --global user.name "Github Actions"
             cd Paper
             ./gradlew applyPatches --stacktrace
-            ./gradlew build --stacktrace
+            ./gradlew createReobfBundlerJar --stacktrace
+
+      - name: Build Container
+        run: |
+          ./jib-$JIB_VERSION/bin/jib jar --from=${{ env.BASE_IMAGE }} --target docker://test-paperclip Paper/build/libs/*.jar
