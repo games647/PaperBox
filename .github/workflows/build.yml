@@ -76,4 +76,4 @@ jobs:
 
       - name: Build Container
         run: |
-          ./jib-$JIB_VERSION/bin/jib jar --from=${{ env.BASE_IMAGE }} --target docker://test-paperclip Paper/build/libs/*.jar
+          ./jib-$JIB_VERSION/bin/jib jar --from=${{ env.BASE_IMAGE }} --target docker://test-paperclip Paper/build/libs/paper-bundler*.jar
