@@ -61,7 +61,7 @@ jobs:
 
       - name: Download JIB
         run: |
-          wget "$JIB_CLI_DOWNLOAD" --output-document jib-cli.zip
+          wget --timestamping "$JIB_CLI_DOWNLOAD" --output-document jib-cli.zip
           # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
           # and in transport modifications
           echo "$JIB_CHECKSUM jib-cli.zip" | sha256sum -c -
