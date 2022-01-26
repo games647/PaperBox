@@ -15,15 +15,42 @@ because libraries are less likely to be updated than the source code. In the end
 * No fat jar: With Jib it's unnecessary to shade/shadow libraries into a big jar file. The classpath inside the image
   will find all necessary libraries.
 
-## Concept image layer layout
+## Concept
+
+The idea of this project relies on the fact that layers in images are cached and can be re-used. If a layer changes,
+itself and all following layers needs to be rebuilt. Therefore, it's recommended to place content that frequently
+changes at the end. See the layout below.
+
+Additionally, to the improved layer layout the GPL compliance needs to addressed. The server implementation violates
+this license. Distributing it, also seems not be allowed. However, binary patching at the users seems to be allowed
+like in similar projects [BuildTools](https://www.spigotmc.org/wiki/buildtools/) or
+[paperclip](https://github.com/PaperMC/Paperclip).
+
+## Image layer layout
 
 Concept currently only:
-1. Base image (current: `distroless/java17-debian11`)
+1. Base image (current: `distroless/java17-debian11` for security and minimalism)
 2. Libraries
 3. Snapshot libraries (are more likely to change)
 4. Mojang vanilla server
 5. Paper API and MojangAPI - available without restrictions
 6. Binary patch vanilla server with server implementation changes
+
+## Limitations
+
+The chosen approach has a few limitations as well:
+
+### Distributing Mojang vanilla server
+
+Distributing the Mojang vanilla server in an extra layer, means we are always including the full, original server. This
+is inefficient, because changes in Paper's server implementation remove, modify parts of the vanilla server making
+these unreachable.
+
+### Patching overhead on server startup
+
+Of course the patching process, necessary GPL compliance, also adds a delay to the server startup. However, this
+overhead should be drastically reduced, because all necessary files are locally available and only the server
+implementation needs to be patched.
 
 ## Differences to other OCI/Container approaches
 
@@ -46,6 +73,15 @@ and provides the server jar in the image. This means that there no download or p
 container is created and started. However, this means that we are distributing a modified server software, which is
 against the GPL. Latter required us to create solutions like [BuildTools](https://www.spigotmc.org/wiki/buildtools/) or
 [paperclip](https://github.com/PaperMC/Paperclip) to build server on our own or binary patch it.
+
+Furthermore, the EULA is automatically accepted, which hides it from the actual users. The process should be opt-in
+explicitly.
+
+### Summary
+
+* Required EULA acceptance when the container runs
+* Binary patching of the server implementation on startup
+* No additional downloads - if you have the OCI/Docker image, you have everything to start up a container
 
 ## Tools used
 
