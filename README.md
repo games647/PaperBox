@@ -15,6 +15,16 @@ because libraries are less likely to be updated than the source code. In the end
 * No fat jar: With Jib it's unnecessary to shade/shadow libraries into a big jar file. The classpath inside the image
   will find all necessary libraries.
 
+## Concept image layer layout
+
+Concept currently only:
+1. Base image (current: `distroless/java17-debian11`)
+2. Libraries
+3. Snapshot libraries (are more likely to change)
+4. Mojang vanilla server
+5. Paper API and MojangAPI - available without restrictions
+6. Binary patch vanilla server with server implementation changes
+
 ## Differences to other OCI/Container approaches
 
 Besides, utilizing a more optimized layer layout:
