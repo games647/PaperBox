@@ -103,8 +103,8 @@ jobs:
             --labels=org.opencontainers.image.url="https://github.com/games647/PaperBox" \
             --labels=org.opencontainers.image.documentation="https://github.com/games647/PaperBox/blob/main/README.md" \
             --labels=org.opencontainers.image.source="https://github.com/games647/PaperBox" \
-            --labels=org.opencontainers.image.version="MC_VERSION" \
-            --labels=org.opencontainers.image.revision="REVISION" \
+            --labels=org.opencontainers.image.version="$MC_VERSION" \
+            --labels=org.opencontainers.image.revision="$REVISION" \
             --labels=org.opencontainers.image.vendor="games647" \
             --labels=org.opencontainers.image.license="GPL-3.0-or-later and MIT" \
             --labels=org.opencontainers.image.title="PaperMC Minecraft server" \
