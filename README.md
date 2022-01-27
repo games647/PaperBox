@@ -29,10 +29,10 @@ like in similar projects [BuildTools](https://www.spigotmc.org/wiki/buildtools/)
 ## Image layer layout
 
 Concept currently only:
-1. Base image (current: `distroless/java17-debian11` for security and minimalism)
+1. Base image (current: `gcr.io/distroless/java17-debian11:nonroot` for security and minimalism)
 2. Libraries
 3. Snapshot libraries (are more likely to change)
-4. Mojang vanilla server
+4. Mojang vanilla server - updated between Minecraft versions
 5. Paper API and MojangAPI - available without restrictions
 6. Binary patch vanilla server with server implementation changes
 

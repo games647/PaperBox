@@ -22,7 +22,7 @@ env:
   JIB_CLI_DOWNLOAD: "https://github.com/GoogleContainerTools/jib/releases/download/v${{ env.JIB_VERSION }}-cli/jib-jre-${{ env.JIB_VERSION }}.zip"
   JIB_CHECKSUM: 'c0f47017f1218a223f51228cc69fe9d7793e600d8a05b11e4dbdba0dee6bfc11'
 
-  BASE_IMAGE: 'openjdk:17'
+  BASE_IMAGE: 'gcr.io/distroless/java17-debian11:nonroot'
 
 jobs:
   # job id
