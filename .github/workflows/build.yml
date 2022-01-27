@@ -90,6 +90,7 @@ jobs:
             # Skopeo enables us to extract the data without pulling the image and having the correct
             # platform/architecture select. JIB will later download the image and uses it's own caching system
             echo "DIGEST=sha256:2e0e651a04b5acb91e8f892c718502e30c8d41287e38fa556e6f6c2eb997e4a4" >> $GITHUB_ENV
+            #echo "DIGEST=`skopeo inspect docker://gcr.io/distroless/java17-debian11:nonroot |  jq -r '.Digest'`" >> $GITHUB_ENV
 
       - name: Build Container
         # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
@@ -98,7 +99,7 @@ jobs:
         run: |
           ./jib-"$JIB_VERSION"/bin/jib jar \
             --from="$BASE_IMAGE@$DIGEST" \
-            --jvm-flags=-server,-Dcom.mojang.eula.agree=true \
+            --jvm-flags=-server \
             --expose=25565 \
             --labels=org.opencontainers.image.created="`(date -u +'%Y-%m-%dT%H:%M:%SZ')`" \
             --labels=org.opencontainers.image.authors="games647" \

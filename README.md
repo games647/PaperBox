@@ -21,6 +21,20 @@ because libraries are less likely to be updated than the source code. In the end
 * Rootless user
 * Cache-optimized layer layout
 
+## Running
+
+Running it, requires accepting the EULA. This can be specified using environment variables:
+```shell
+docker run -e JDK_JAVA_OPTIONS=-Dcom.mojang.eula.agree=true ...
+podman run -e JDK_JAVA_OPTIONS=-Dcom.mojang.eula.agree=true ...
+```
+
+### Configuring
+
+* Memory settings: Since Java 10, the JVM is aware of cgroup limits. So it should be preferred to configure
+  the container memory limits. See `podman run --memory` or `docker run --memory`.
+  [ref](https://www.atamanroman.dev/articles/usecontainersupport-to-the-rescue/)
+
 ## Concept
 
 The idea of this project relies on the fact that layers in images are cached and can be re-used. If a layer changes,
