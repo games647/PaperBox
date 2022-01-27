@@ -85,9 +85,9 @@ jobs:
             git config --global user.name "Github Actions"
             # Change to the submodule folder
             cd Paper
-            ./gradlew applyPatches --stacktrace
+            ./gradlew applyPatches --exclude-task test --exclude-task check --stacktrace
             # Create a full paperclip build
-            ./gradlew createReobfPaperclipJar --stacktrace
+            ./gradlew createReobfPaperclipJar --exclude-task test --exclude-task check --stacktrace
 
       - name: Extract vars
         run: |
