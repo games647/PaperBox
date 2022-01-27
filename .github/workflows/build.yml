@@ -62,6 +62,7 @@ jobs:
 
       - name: Download JIB
         run: |
+          echo "Downloading JIB-Tool from $$JIB_CLI_DOWNLOAD"
           wget --timestamping "$JIB_CLI_DOWNLOAD" --output-document jib-cli.zip
           # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
           # or in transport modifications (MITM)
@@ -78,6 +79,14 @@ jobs:
             # Create a full paperclip build
             ./gradlew createReobfPaperclipJar --stacktrace
 
+      - name: Extract vars
+        run: |
+            echo "Extracting versions"
+            # Extract the Minecraft version
+            echo "MC_VERSION=`grep --perl-regexp --only-matching '(?<=mcVersion=)[0-9\.]*' Paper/gradle.properties`" >> $GITHUB_ENV
+            # Extract the Paper source code revision
+            echo "REVISION=`git -C Paper/ rev-parse HEAD`" >> $GITHUB_ENV
+
       - name: Build Container
         run: |
           ./jib-$JIB_VERSION/bin/jib jar \
@@ -90,6 +99,8 @@ jobs:
             --labels=org.opencontainers.image.url=https://github.com/games647/PaperBox \
             --labels=org.opencontainers.image.documentation=https://github.com/games647/PaperBox/blob/main/README.md \
             --labels=org.opencontainers.image.source=https://github.com/games647/PaperBox \
+            --labels=org.opencontainers.image.version=${{ env.MC_VERSION }} \
+            --labels=org.opencontainers.image.revision=${{ env.REVISION }} \
             --labels=org.opencontainers.image.vendor=games647 \
             # https://github.com/PaperMC/Paper/blob/master/LICENSE.md
             --labels=org.opencontainers.image.license="GPL-3.0-or-later and MIT" \

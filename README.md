@@ -15,6 +15,12 @@ because libraries are less likely to be updated than the source code. In the end
 * No fat jar: With Jib it's unnecessary to shade/shadow libraries into a big jar file. The classpath inside the image
   will find all necessary libraries.
 
+## Features
+
+* Offline
+* Rootless user
+* Cache-optimized layer layout
+
 ## Concept
 
 The idea of this project relies on the fact that layers in images are cached and can be re-used. If a layer changes,
