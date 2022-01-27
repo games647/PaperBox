@@ -93,6 +93,8 @@ jobs:
 
       - name: Build Container
         # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
+        # Paper is licensed under GPL 3 and MIT but not dual licensed (strictly and not or):
+        # https://github.com/PaperMC/Paper/blob/master/LICENSE.md
         run: |
           ./jib-"$JIB_VERSION"/bin/jib jar \
             --from="$BASE_IMAGE@$DIGEST" \
@@ -111,5 +113,5 @@ jobs:
             --labels=org.opencontainers.image.description="Paper server implementation of the Minecraft server" \
             --labels=org.opencontainers.image.base.digest="$DIGEST" \
             --labels=org.opencontainers.image.base.name="$BASE_IMAGE" \
-            --program-args=--no-gui \
+            --program-args=--nogui \
             --target docker://test-paperclip Paper/build/libs/paper-paperclip*.jar
