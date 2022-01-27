@@ -15,6 +15,7 @@ on:
       - main
 
 env:
+  # temurin is the successor of adoptjdk
   JDK_DISTRIBUTION: 'temurin'
   JAVA_VERSION: 17
 
@@ -63,15 +64,18 @@ jobs:
         run: |
           wget --timestamping "$JIB_CLI_DOWNLOAD" --output-document jib-cli.zip
           # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
-          # and in transport modifications
+          # or in transport modifications (MITM)
           echo "$JIB_CHECKSUM jib-cli.zip" | sha256sum -c -
 
       - name: Patch and build
         run: |
+            # Setup names for Git patching
             git config --global user.email "no-reply@github.com"
             git config --global user.name "Github Actions"
+            # Change to the submodule folder
             cd Paper
             ./gradlew applyPatches --stacktrace
+            # Create a full paperclip build
             ./gradlew createReobfPaperclipJar --stacktrace
 
       - name: Build Container
@@ -80,5 +84,16 @@ jobs:
             --from=${{ env.BASE_IMAGE }} \
             --jvm-flags=-server,-Dcom.mojang.eula.agree=true \
             --expose=25565 \
+            # Follow https://github.com/opencontainers/image-spec/blob/main/annotations.md
+            --labels=org.opencontainers.image.created=`(date -u +'%Y-%m-%dT%H:%M:%SZ')` \
+            --labels=org.opencontainers.image.authors=games647 \
+            --labels=org.opencontainers.image.url=https://github.com/games647/PaperBox \
+            --labels=org.opencontainers.image.documentation=https://github.com/games647/PaperBox/blob/main/README.md \
+            --labels=org.opencontainers.image.source=https://github.com/games647/PaperBox \
+            --labels=org.opencontainers.image.vendor=games647 \
+            # https://github.com/PaperMC/Paper/blob/master/LICENSE.md
+            --labels=org.opencontainers.image.license="GPL-3.0-or-later and MIT" \
+            --labels=org.opencontainers.image.title="PaperMC Minecraft server" \
+            --labels=org.opencontainers.image.description="Paper server implementation of the Minecraft server" \
             --program-args=--no-gui \
             --target docker://test-paperclip Paper/build/libs/paper-paperclip*.jar
