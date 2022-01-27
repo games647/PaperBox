@@ -78,5 +78,6 @@ jobs:
         run: |
           ./jib-$JIB_VERSION/bin/jib jar \
             --from=${{ env.BASE_IMAGE }} \
+            --jvm-flags=-server,-Dcom.mojang.eula.agree=true \
             --expose=25565 \
             --target docker://test-paperclip Paper/build/libs/paper-paperclip*.jar
