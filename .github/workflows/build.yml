@@ -72,8 +72,8 @@ jobs:
             git config --global user.name "Github Actions"
             cd Paper
             ./gradlew applyPatches --stacktrace
-            ./gradlew build --stacktrace
+            ./gradlew createReobfPaperclipJar --stacktrace
 
       - name: Build Container
         run: |
-          ./jib-$JIB_VERSION/bin/jib jar --from=${{ env.BASE_IMAGE }} --target docker://test-paperclip Paper/build/libs/paper-bundler*.jar
+          ./jib-$JIB_VERSION/bin/jib jar --from=${{ env.BASE_IMAGE }} --target docker://test-paperclip Paper/build/libs/paper-paperclip*.jar
