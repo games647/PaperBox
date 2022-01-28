@@ -39,6 +39,13 @@ podman run -e JDK_JAVA_OPTIONS=-Dcom.mojang.eula.agree=true ...
   `-e JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
   from above like `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
 
+### Useful projects
+
+* [Auto pause](https://github.com/timvisee/lazymc): Automatically stops or pauses the server process if the server is
+  idle. For container projects, this could be realized using a sidecar pattern. However, this would require container
+  engine access, which is not recommended for security, or using an additional service inside the container.
+  **Open for any suggestions**
+
 ## Concept
 
 The idea of this project relies on the fact that layers in images are cached and can be re-used. If a layer changes,
