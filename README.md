@@ -9,11 +9,14 @@ because libraries are less likely to be updated than the source code. In the end
 
 * Reduced network traffic: OCI images are downloaded by layer. If the library layer is already present and there are no
   changes, then it doesn't need to be downloaded.
-* Reduced disk space: Same as above
-* Improved image build time: First the existing library layer can be used and second there is no need to package the
-  project into a jar file. As long the project is compiled into class files, it's ready to startup.
-* No fat jar: With Jib it's unnecessary to shade/shadow libraries into a big jar file. The classpath inside the image
-  will find all necessary libraries.
+* Reduced disk space: Same as above. Layers are re-used if they are the same and do not use additional space.
+* Improved build time: 
+  * No fat jar/shadowing/shading of libraries: Including the libraries is now 
+  * No packaging into jar: We can run the class files directly from the file system with an adjusted classpath. 
+    This removes the packaging into jar step.
+
+**Note**: The last point is currently not implemented, because this project currently uses Paperclip instead of 
+something custom. 
 
 ## Features
 
