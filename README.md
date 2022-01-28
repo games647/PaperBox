@@ -151,4 +151,8 @@ act --reuse --bind --container-daemon-socket $XDG_RUNTIME_DIR/podman/podman.sock
 #### wagoodman/dive
 
 [wagoodman/dive](https://github.com/wagoodman/dive) inspect the contents of the image for each layer. Inspect the
-separation process.
+separation process. Example:
+
+```shell
+dive podman://localhost/IMAGE
+```
