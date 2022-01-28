@@ -38,6 +38,8 @@ podman run -e JDK_JAVA_OPTIONS=-Dcom.mojang.eula.agree=true ...
   by default using the `JDK_JAVA_OPTIONS` environment variable. If you want to modify or remove flags, use
   `-e JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
   from above like `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
+* Similar remote debugging can be enabled using the following parameters:
+  `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005`
 
 ### Useful projects
 
