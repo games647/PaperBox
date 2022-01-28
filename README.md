@@ -3,8 +3,8 @@
 ## Description
 
 Build the Minecraft Paper server software using an optimized container layout format. The
-[JIB-Tool](https://github.com/GoogleContainerTools/jib) builds OCI images by separating library dependencies into
-a different layer than the actual source code (here: Spigot/Paper changes). This improves layer cache utilization,
+[JIB-Tool](https://github.com/GoogleContainerTools/jib) builds OCI or Docker images by separating library dependencies 
+into a different layer than the actual source code (here: Spigot/Paper changes). This improves layer cache utilization,
 because libraries are less likely to be updated than the source code. In the end, this provides the following benefits:
 
 * Reduced network traffic: OCI images are downloaded by layer. If the library layer is already present and there are no
