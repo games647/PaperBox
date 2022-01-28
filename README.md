@@ -18,7 +18,9 @@ because libraries are less likely to be updated than the source code. In the end
 ## Features
 
 * Offline
-* Rootless user
+* Minimal container setup: only 300 MiB vs 450 MiB (felixklauke/paperspigot) or 800 MiB (itzg/minecraft-server)
+  * No unnecessary packages like `dos2unix` or ``nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
+* Rootless user (is that really a feature? it should be standard)
 * Cache-optimized layer layout
 
 ## Running
