@@ -27,8 +27,8 @@ because libraries are less likely to be updated than the source code. In the end
 
 Running it, requires accepting the EULA. This can be specified using environment variables:
 ```shell
-docker run -e JDK_JAVA_OPTIONS=-Dcom.mojang.eula.agree=true ...
-podman run -e JDK_JAVA_OPTIONS=-Dcom.mojang.eula.agree=true ...
+docker run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
+podman run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
 ```
 
 ### Configuring
@@ -128,7 +128,7 @@ set it using `export GITHUB_TOKEN=ghp_[...]`. Note tha
 
 Docker:
 ```shell
-act --reuse --bind --secret GITHUB_TOKEN=$GITHUB_TOKEN
+act --reuse --bind --secret GITHUB_TOKEN="$GITHUB_TOKEN"
 ```
 
 Podman:
@@ -138,8 +138,8 @@ Podman requires additional setup. Assuming podman is configured it rootless mode
 # Enable the podman socket using systemd
 systemctl enable --now --user podman.socket
 # Emulate a Docker socket
-export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock
-act --reuse --bind --container-daemon-socket $XDG_RUNTIME_DIR/podman/podman.sock --secret GITHUB_TOKEN=$GITHUB_TOKEN
+export DOCKER_HOST=unix://"$XDG_RUNTIME_DIR"/podman/podman.sock
+act --reuse --bind --container-daemon-socket "$XDG_RUNTIME_DIR"/podman/podman.sock --secret GITHUB_TOKEN="$GITHUB_TOKEN"
 ```
 
 #### Arguments
