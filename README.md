@@ -33,44 +33,6 @@ something custom.
 * Binary patching of the server implementation on startup
   * Distributing the server implementation could be against the GPL
 
-## Running
-
-Running it, requires accepting the EULA. This can be specified using environment variables:
-```shell
-docker run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
-podman run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
-```
-
-### Configuring
-
-* Memory settings: Since Java 10, the JVM is aware of cgroup limits. So it should be preferred to configure
-  the container memory limits. See `podman run --memory` or `docker run --memory`.
-  [ref](https://www.atamanroman.dev/articles/usecontainersupport-to-the-rescue/)
-* JVM Flags. The project includes the [aikar JVM](ttps://paper.readthedocs.io/en/latest/server/aikar-flags.html) flags
-  by default using the `JDK_JAVA_OPTIONS` environment variable. If you want to modify or remove flags, use
-  `-e JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
-  from above like `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
-* Similar remote debugging can be enabled using the following parameters:
-  `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005`
-
-### Useful projects
-
-* [Auto pause](https://github.com/timvisee/lazymc): Automatically stops or pauses the server process if the server is
-  idle. For container projects, this could be realized using a sidecar pattern. However, this would require container
-  engine access, which is not recommended for security, or using an additional service inside the container.
-  **Open for any suggestions**
-
-## Concept
-
-The idea of this project relies on the fact that layers in images are cached and can be re-used. If a layer changes,
-itself and all following layers needs to be rebuilt. Therefore, it's recommended to place content that frequently
-changes at the end. See the layout below.
-
-Additionally, to the improved layer layout the GPL compliance needs to addressed. The server implementation violates
-this license. Distributing it, also seems not be allowed. However, binary patching at the users seems to be allowed
-like in similar projects [BuildTools](https://www.spigotmc.org/wiki/buildtools/) or
-[paperclip](https://github.com/PaperMC/Paperclip).
-
 ## Image layer layout
 
 Concept currently only:
@@ -121,6 +83,44 @@ against the GPL. Latter required us to create solutions like [BuildTools](https:
 
 Furthermore, the EULA is automatically accepted, which hides it from the actual users. The process should be opt-in
 explicitly to make it transparent to users.
+
+## Running
+
+Running it, requires accepting the EULA. This can be specified using environment variables:
+```shell
+docker run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
+podman run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
+```
+
+### Configuring
+
+* Memory settings: Since Java 10, the JVM is aware of cgroup limits. So it should be preferred to configure
+  the container memory limits. See `podman run --memory` or `docker run --memory`.
+  [ref](https://www.atamanroman.dev/articles/usecontainersupport-to-the-rescue/)
+* JVM Flags. The project includes the [aikar JVM](ttps://paper.readthedocs.io/en/latest/server/aikar-flags.html) flags
+  by default using the `JDK_JAVA_OPTIONS` environment variable. If you want to modify or remove flags, use
+  `-e JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
+  from above like `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
+* Similar remote debugging can be enabled using the following parameters:
+  `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005`
+
+### Useful projects
+
+* [Auto pause](https://github.com/timvisee/lazymc): Automatically stops or pauses the server process if the server is
+  idle. For container projects, this could be realized using a sidecar pattern. However, this would require container
+  engine access, which is not recommended for security, or using an additional service inside the container.
+  **Open for any suggestions**
+
+## Concept
+
+The idea of this project relies on the fact that layers in images are cached and can be re-used. If a layer changes,
+itself and all following layers needs to be rebuilt. Therefore, it's recommended to place content that frequently
+changes at the end. See the layout below.
+
+Additionally, to the improved layer layout the GPL compliance needs to addressed. The server implementation violates
+this license. Distributing it, also seems not be allowed. However, binary patching at the users seems to be allowed
+like in similar projects [BuildTools](https://www.spigotmc.org/wiki/buildtools/) or
+[paperclip](https://github.com/PaperMC/Paperclip).
 
 ## Tools used
 
