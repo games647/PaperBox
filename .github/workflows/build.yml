@@ -97,6 +97,8 @@ jobs:
         # https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3
         run: |
           jar uf Paper/build/libs/paper-paperclip*.jar BOOT-INF
+          mkdir --parents cache
+          ln --force --symbolic ../Paper/.gradle/caches/paperweight/taskCache/minecraft.jar cache/mojang_"$MC_VERSION".jar
 
       - name: Extract vars
         run: |
@@ -136,4 +138,4 @@ jobs:
             --program-args=--nogui \
             --entrypoint="java -cp /app io.papermc.paperclip.Main" \
             --additional-tags="$MC_VERSION" \
-            --target docker://paperclip Paper/build/libs/paper-paperclip*.jar
+            --target docker://ghcr.io/games647/paperclip Paper/build/libs/paper-paperclip*.jar

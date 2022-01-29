@@ -1,13 +1,14 @@
 - "paperclip-libraries":
-  - "paperclip/libs/"
   - "META-INF/license/"
+  - "paperclip/libs/"
 - "paperclip":
-  - "io/papermc/paperclip/"
   - "META-INF/MANIFEST.MF"
+  - "io/papermc/paperclip/"
 - "vanilla":
   - "META-INF/download-context"
-  - "version.json"
   - "META-INF/versions.list"
+  - "version.json"
+  - "cache/"
 - "libraries":
   - "META-INF/libraries/"
   - "META-INF/libraries.list"
