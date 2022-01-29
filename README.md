@@ -90,7 +90,7 @@ these unreachable.
 
 ### Patching overhead on server startup
 
-Of course the patching process, necessary GPL compliance, also adds a delay to the server startup. However, this
+Of course the patching process, necessary for GPL compliance, also adds a delay to the server startup. However, this
 overhead should be drastically reduced, because all necessary files are locally available and only the server
 implementation needs to be patched.
 
@@ -111,19 +111,13 @@ like checksum.
 ### FelixKlauke/paperspigot-docker
 
 [FelixKlauke/paperspigot-docker](https://github.com/FelixKlauke/paperspigot-docker) builds the Paper server software
-and provides the server jar in the image. This means that there no download or patching process involved when the
+and provides the server jar in the image. This means that there is no download or patching process involved when the
 container is created and started. However, this means that we are distributing a modified server software, which is
 against the GPL. Latter required us to create solutions like [BuildTools](https://www.spigotmc.org/wiki/buildtools/) or
 [paperclip](https://github.com/PaperMC/Paperclip) to build server on our own or binary patch it.
 
 Furthermore, the EULA is automatically accepted, which hides it from the actual users. The process should be opt-in
-explicitly.
-
-### Summary
-
-* Required EULA acceptance when the container runs
-* Binary patching of the server implementation on startup
-* No additional downloads - if you have the OCI/Docker image, you have everything to start up a container
+explicitly to make it transparent to users.
 
 ## Tools used
 
