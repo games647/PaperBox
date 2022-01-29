@@ -1,0 +1,17 @@
+- "paperclip-libraries":
+  - "paperclip/libs/"
+  - "META-INF/license/"
+- "paperclip":
+  - "io/papermc/paperclip/"
+  - "META-INF/MANIFEST.MF"
+- "vanilla":
+  - "META-INF/download-context"
+  - "version.json"
+  - "META-INF/versions.list"
+- "libraries":
+  - "META-INF/libraries/"
+  - "META-INF/libraries.list"
+- "application":
+  - "META-INF/main-class"
+  - "META-INF/versions/"
+  - "META-INF/patches.list"

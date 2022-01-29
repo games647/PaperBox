@@ -92,6 +92,12 @@ jobs:
           # Create a full paperclip build
           ./gradlew createReobfPaperclipJar --exclude-task test --exclude-task check --stacktrace
 
+      - name: Import layer layout
+        # Use Spring boots layers.idx file to separate libraries, vanilla server, etc manually
+        # https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3
+        run: |
+          jar uf Paper/build/libs/paper-paperclip*.jar BOOT-INF
+
       - name: Extract vars
         run: |
           echo "Extracting versions"
