@@ -93,14 +93,14 @@ jobs:
         run: |
           echo "Extracting versions"
           # Extract the Minecraft version
-          echo "MC_VERSION=`grep --perl-regexp --only-matching '(?<=mcVersion=)[0-9\.]*' Paper/gradle.properties`" >> $GITHUB_ENV
+          echo "MC_VERSION=$(grep --perl-regexp --only-matching '(?<=mcVersion=)[0-9\.]*' Paper/gradle.properties)" >> "$GITHUB_ENV"
           # Extract the Paper source code revision
-          echo "REVISION=`git -C Paper/ rev-parse HEAD`" >> $GITHUB_ENV
+          echo "REVISION=$(git -C Paper/ rev-parse HEAD)" >> "$GITHUB_ENV"
           # Extract the latest digest to include it in the metadata for reproducibility
           # Skopeo enables us to extract the data without pulling the image and having the correct
           # platform/architecture select. JIB will later download the image and uses it's own caching system
-          echo "DIGEST=sha256:2e0e651a04b5acb91e8f892c718502e30c8d41287e38fa556e6f6c2eb997e4a4" >> $GITHUB_ENV
-          #echo "DIGEST=`skopeo inspect docker://gcr.io/distroless/java17-debian11:nonroot |  jq -r '.Digest'`" >> $GITHUB_ENV
+          echo "DIGEST=sha256:2e0e651a04b5acb91e8f892c718502e30c8d41287e38fa556e6f6c2eb997e4a4" >> "$GITHUB_ENV"
+          #echo "DIGEST=`skopeo inspect docker://gcr.io/distroless/java17-debian11:nonroot |  jq -r '.Digest'`" >> "$GITHUB_ENV"
 
       - name: Build Container
         # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
@@ -111,7 +111,7 @@ jobs:
             --from="$BASE_IMAGE@$DIGEST" \
             --environment-variables JDK_JAVA_OPTIONS="$JVM_FLAGS" \
             --expose=25565 \
-            --labels=org.opencontainers.image.created="`(date -u +'%Y-%m-%dT%H:%M:%SZ')`" \
+            --labels=org.opencontainers.image.created="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
             --labels=org.opencontainers.image.authors="games647" \
             --labels=org.opencontainers.image.url="https://github.com/games647/PaperBox" \
             --labels=org.opencontainers.image.documentation="https://github.com/games647/PaperBox/blob/main/README.md" \
