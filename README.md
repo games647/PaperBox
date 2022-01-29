@@ -14,7 +14,7 @@ because libraries are less likely to be updated than the source code. In the end
   * No fat jar/shadowing/shading of libraries: Including the libraries is now 
   * No packaging into jar: We can run the class files directly from the file system with an adjusted classpath. 
     This removes the packaging into jar step.
-  * 
+
 [Reference](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#i-want-to-containerize-a-jar)
 
 **Note**: The last point is currently not implemented, because this project currently uses Paperclip instead of 
@@ -27,7 +27,7 @@ there is no such solution as of now.
 * Offline
   * All necessary files to run the server are already included in the image
   * Specifically it contains the all libraries, the vanilla server and the diff files to get the patched server 
-  implementation.
+  implementation
 * Minimal: only 300 MiB vs 450 MiB (`felixklauke/paperspigot`) or 800 MiB (`itzg/minecraft-server`)
   * No unnecessary packages like `dos2unix` or `nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
   * Based on the distroless base image
