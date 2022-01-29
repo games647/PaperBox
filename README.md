@@ -83,6 +83,10 @@ Of course the patching process, necessary for GPL compliance, also adds a delay 
 overhead should be drastically reduced, because all necessary files are locally available and only the server
 implementation needs to be patched.
 
+However, Paperclip supports patch-only start, which you could use to warm up the container. You can specify the
+parameter using `-Dpaperclip.patchonly=true`.
+[ref](https://github.com/PaperMC/Paperclip/blob/dcd86a9faf4ee82b434bcf26a8e4b2dd4eb39c87/java17/src/main/java/io/papermc/paperclip/Paperclip.java)
+
 ## Differences to other OCI/Container approaches
 
 Besides, utilizing a more optimized layer layout:
