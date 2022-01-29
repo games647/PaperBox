@@ -29,6 +29,9 @@ something custom.
   * Based on the distroless base image
 * Rootless user (is that really a feature? it should be standard)
 * Cache-optimized layer layout
+* Required EULA acceptance - make this decision transparent to the user
+* Binary patching of the server implementation on startup
+  * Distributing the server implementation could be against the GPL
 
 ## Running
 
