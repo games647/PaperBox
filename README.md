@@ -102,11 +102,11 @@ Besides, utilizing a more optimized layer layout:
 
 The project at [itzg/minecraft-server](https://hub.docker.com/r/itzg/minecraft-server) downloads the server software
 at container startup. This increases the container startup time. Containers should be ready to start directly.
-Furthermore, it downloads a file from a foreign source (by default: https://getbukkit.org/). In a very strict setup,
-this affects the security policies. First, it requires allowing an otherwise unnecessary outgoing connection
-(e.g. allow list network policy) and trusting a foreign source. There no verification process involved, that would
-detect changed server jar on the upstream server (like checksum to expect a certain build). This would make it also
-harder to debug it, because they are not reproducible.
+(Note: The patching process implemented in this project also has a delay) Furthermore, it downloads a file from a 
+foreign source (by default: https://getbukkit.org/). In a very strict setup, this affects the security policies. First, 
+it requires allowing an otherwise unnecessary outgoing connection (e.g. allow list policies) and trusting a 
+foreign source. There no verification process involved, that would detect changed server jar on the upstream server 
+like checksum. 
 
 ### FelixKlauke/paperspigot-docker
 
