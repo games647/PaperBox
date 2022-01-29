@@ -14,6 +14,8 @@ because libraries are less likely to be updated than the source code. In the end
   * No fat jar/shadowing/shading of libraries: Including the libraries is now 
   * No packaging into jar: We can run the class files directly from the file system with an adjusted classpath. 
     This removes the packaging into jar step.
+  * 
+[Reference](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#i-want-to-containerize-a-jar)
 
 **Note**: The last point is currently not implemented, because this project currently uses Paperclip instead of 
 something custom. 
@@ -88,8 +90,8 @@ explicitly to make it transparent to users.
 
 Running it, requires accepting the EULA. This can be specified using environment variables:
 ```shell
-docker run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
-podman run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
+docker run --env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
+podman run --env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
 ```
 
 ### Configuring
@@ -99,10 +101,10 @@ podman run -e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
   [ref](https://www.atamanroman.dev/articles/usecontainersupport-to-the-rescue/)
 * JVM Flags. The project includes the [aikar JVM](ttps://paper.readthedocs.io/en/latest/server/aikar-flags.html) flags
   by default using the `JDK_JAVA_OPTIONS` environment variable. If you want to modify or remove flags, use
-  `-e JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
-  from above like `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
+  `--env JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
+  from above like `--env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
 * Similar remote debugging can be enabled using the following parameters:
-  `-e JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005`
+  `--env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005"`
 
 ### Useful projects
 
@@ -123,6 +125,8 @@ like in similar projects [BuildTools](https://www.spigotmc.org/wiki/buildtools/)
 [paperclip](https://github.com/PaperMC/Paperclip).
 
 ## Tools used
+
+Besides, the obvious JIB-Tool:
 
 ### nektos/act
 

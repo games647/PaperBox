@@ -44,6 +44,8 @@ jobs:
 
     # Run steps
     steps:
+      - name: Checkout PaperBox
+        uses: actions/checkout@v2.4.0
       # Pull changes
       - name: Checkout Paper
         uses: actions/checkout@v2.4.0
@@ -76,7 +78,7 @@ jobs:
           wget --timestamping "$JIB_CLI_DOWNLOAD"
           # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
           # or in transport modifications (MITM)
-          echo "$JIB_CHECKSUM" "jib-jre-$JIB_VERSION.zip" | sha256sum -c -
+          echo "$JIB_CHECKSUM" "jib-jre-$JIB_VERSION.zip" | sha256sum --check -
 
       - name: Patch and build
         run: |
@@ -100,7 +102,7 @@ jobs:
           # Skopeo enables us to extract the data without pulling the image and having the correct
           # platform/architecture select. JIB will later download the image and uses it's own caching system
           echo "DIGEST=sha256:2e0e651a04b5acb91e8f892c718502e30c8d41287e38fa556e6f6c2eb997e4a4" >> "$GITHUB_ENV"
-          #echo "DIGEST=`skopeo inspect docker://gcr.io/distroless/java17-debian11:nonroot |  jq -r '.Digest'`" >> "$GITHUB_ENV"
+          #echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq -r '.Digest')" >> "$GITHUB_ENV"
 
       - name: Build Container
         # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
