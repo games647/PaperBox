@@ -125,4 +125,5 @@ jobs:
             --labels=org.opencontainers.image.base.digest="$DIGEST" \
             --labels=org.opencontainers.image.base.name="$BASE_IMAGE" \
             --program-args=--nogui \
-            --target docker://test-paperclip Paper/build/libs/paper-paperclip*.jar
+            --additional-tags="$MC_VERSION" \
+            --target docker://paperclip Paper/build/libs/paper-paperclip*.jar
