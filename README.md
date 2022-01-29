@@ -18,7 +18,9 @@ because libraries are less likely to be updated than the source code. In the end
 [Reference](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#i-want-to-containerize-a-jar)
 
 **Note**: The last point is currently not implemented, because this project currently uses Paperclip instead of 
-something custom. 
+something custom. Ideal would be the usage of a JIB Gradle task to automatically extract all necessary dependencies
+and include a modified version of `paperweight` to create a diff, but skipping the jar and shadowing step. It seems
+there is no such solution as of now.
 
 ## Features
 
@@ -26,28 +28,48 @@ something custom.
   * All necessary files to run the server are already included in the image
   * Specifically it contains the all libraries, the vanilla server and the diff files to get the patched server 
   implementation.
-* Minimal container: only 300 MiB vs 450 MiB (`felixklauke/paperspigot`) or 800 MiB (`itzg/minecraft-server`)
-  * No unnecessary packages like `dos2unix` or ``nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
+* Minimal: only 300 MiB vs 450 MiB (`felixklauke/paperspigot`) or 800 MiB (`itzg/minecraft-server`)
+  * No unnecessary packages like `dos2unix` or `nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
   * Based on the distroless base image
+    * Reduced attack surface and image size
 * Rootless user (is that really a feature? it should be standard)
 * Cache-optimized layer layout
+* Tons of metadata labels
 * Required EULA acceptance - make this decision transparent to the user
 * Binary patching of the server implementation on startup
   * Distributing the server implementation could be against the GPL
 
-## Image layer layout
+## Implementation
 
-Concept currently only:
-1. Base image (current: `gcr.io/distroless/java17-debian11:nonroot` for security and minimalism)
-2. Libraries
-3. Snapshot libraries (are more likely to change)
-4. Mojang vanilla server - updated between Minecraft versions
-5. Paper API and MojangAPI - available without restrictions
-6. Binary patch vanilla server with server implementation changes
+The implementation can be found in the GitHub actions file [here](.github/workflows/build.yml). It can be summarized in
+the following steps:
+
+1. Download Paper
+2. Create a Paperclip version
+3. Package `layers.idx` into the jar to specify the layers manually
+   * Based on [Spring Boot]( https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3)
+   * JIB Feature: https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#exploded-mode-recommended-1
+4. Invoke the JIB-CLI tool to build the container
+
+Creating the following image layer layout:
+
+| Layer | Implementation                     | Ideal              |
+|-------|------------------------------------|--------------------|
+| -     | Base Image                         | Base image         |
+| 1     | Paperclip libraries                | Libraries          |
+| 2     | Paperclip classes                  | Snapshot libraries |
+| 3     | Vanilla server                     | Vanilla server     |
+| 4     | Server libraries (incl. Paper-API) | Paper API          |
+| 5     | Server patch                       | Sever patch        |
+
+Meanwhile, the [recommended](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#how-are-jib-applications-layered) 
+setup by JIB includes the right side, because snapshot libraries are updated more often.
 
 ## Limitations
 
-The chosen approach has a few limitations as well:
+The chosen approach has a few limitations and Anti-Patterns, namely:
+
+* Patching the server is stateful
 
 ### Distributing Mojang vanilla server
 
