@@ -22,6 +22,11 @@ something custom. Ideal would be the usage of a JIB Gradle task to automatically
 and include a modified version of `paperweight` to create a diff, but skipping the jar and shadowing step. It seems
 there is no such solution as of now.
 
+## Alternative Tools
+
+* [Dockerfile Maven](https://github.com/spotify/dockerfile-maven)
+* [Buildpacks](https://github.com/paketo-buildpacks/executable-jar)
+
 ## Features
 
 * Offline
