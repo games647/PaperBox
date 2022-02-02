@@ -37,9 +37,11 @@ there is no such solution as of now.
   * No unnecessary packages like `dos2unix` or `nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
   * Based on the distroless base image
     * Reduced attack surface and image size
+    * No shell or package manager
 * Rootless user (is that really a feature? it should be standard)
 * Cache-optimized layer layout
 * Tons of metadata labels
+  * Including base image digest label
 * Required EULA acceptance - make this decision transparent to the user
 * Binary patching of the server implementation on startup
   * Distributing the server implementation could be against the GPL
