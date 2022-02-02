@@ -140,9 +140,13 @@ podman run --env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ...
 
 ### Configuring
 
-* Memory settings: Since Java 10, the JVM is aware of cgroup limits. So it should be preferred to configure
-  the container memory limits. See `podman run --memory` or `docker run --memory`.
+* Memory settings: Since Java 10, the JVM is aware of cgroup limits. 
+  See `podman run --memory` or `docker run --memory`.
   [ref](https://www.atamanroman.dev/articles/usecontainersupport-to-the-rescue/)
+* For specific settings [Java Memory Calculator](https://github.com/cloudfoundry/java-buildpack-memory-calculator) is
+  recommended, but specific to your server setup like plugins, etc.
+  * `$ java-buildpack-memory-calculator --total-memory 2G --loaded-class-count 500 --thread-count 20`
+  * Result: `-XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=16503K -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx1804168K`
 * JVM Flags. The project includes the [aikar JVM](ttps://paper.readthedocs.io/en/latest/server/aikar-flags.html) flags
   by default using the `JDK_JAVA_OPTIONS` environment variable. If you want to modify or remove flags, use
   `--env JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
