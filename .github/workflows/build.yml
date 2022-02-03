@@ -92,14 +92,6 @@ jobs:
           # Create a full paperclip build
           ./gradlew createReobfPaperclipJar --exclude-task test --exclude-task check --stacktrace
 
-      - name: Import layer layout
-        # Use Spring boots layers.idx file to separate libraries, vanilla server, etc manually
-        # https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3
-        run: |
-          jar uf Paper/build/libs/paper-paperclip*.jar BOOT-INF
-          mkdir --parents cache
-          ln --force --symbolic ../Paper/.gradle/caches/paperweight/taskCache/minecraft.jar cache/mojang_"$MC_VERSION".jar
-
       - name: Extract vars
         run: |
           echo "Extracting versions"
@@ -112,6 +104,12 @@ jobs:
           # platform/architecture select. JIB will later download the image and uses it's own caching system
           echo "DIGEST=sha256:ded834a82e05408ecc5edac97120f7c48d61e94cb3ec26cc44e8f711d20b00f0" >> "$GITHUB_ENV"
           #echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq -r '.Digest')" >> "$GITHUB_ENV"
+
+      - name: Import layer layout
+        # Use Spring boots layers.idx file to separate libraries, vanilla server, etc manually
+        # https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3
+        run: |
+          jar uf Paper/build/libs/paper-paperclip*.jar BOOT-INF
 
       - name: Build Container
         # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
