@@ -6,3 +6,7 @@ jib-*
 
 # Workflow cache
 workflow/*
+
+# Compiled build file
+jib.yaml
+Paper/

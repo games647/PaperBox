@@ -1,0 +1,109 @@
+# required apiVersion and kind, for compatibility over versions of the cli
+apiVersion: jib/v1alpha1
+kind: BuildFile
+
+# full base image specification with detail for manifest lists or multiple architectures
+from:
+  image: "${BASE_IMAGE}@${DIGEST}"
+
+# container environment variables
+environment:
+  "JDK_JAVA_OPTIONS": "${JVM_FLAGS}"
+
+# container labels
+labels:
+  # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
+  "org.opencontainers.image.created": "${CREATED}"
+  "org.opencontainers.image.authors": "games647"
+  "org.opencontainers.image.url": "https://github.com/games647/PaperBox"
+  "org.opencontainers.image.documentation": "https://github.com/games647/PaperBox/blob/main/README.md"
+  "org.opencontainers.image.source": "https://github.com/games647/PaperBox"
+  "org.opencontainers.image.version": "${MC_VERSION}"
+  "org.opencontainers.image.revision": "${REVISION}"
+  "org.opencontainers.image.vendor": "games647"
+  # Paper is licensed under GPL 3 and MIT but not dual licensed (strictly and not or):
+  # https://github.com/PaperMC/Paper/blob/master/LICENSE.md
+  "org.opencontainers.image.license": "GPL-3.0-or-later and MIT"
+  "org.opencontainers.image.title": "PaperMC Minecraft server"
+  "org.opencontainers.image.description": "Paper server implementation of the Minecraft server"
+  "org.opencontainers.image.base.digest": "${DIGEST}"
+  "org.opencontainers.image.base.name": "${BASE_IMAGE}"
+
+## specify exposed ports metadata (port-number/protocol)
+exposedPorts:
+  - "25565"
+
+entrypoint:
+  - "java"
+  - "-cp"
+  - "/app"
+  - "io.papermc.paperclip.Main"
+
+cmd:
+  # Disable the GUI by default
+  - "--nogui"
+
+## file layers of the container
+layers:
+  entries:
+    # Paperclip (server implementation patcher)
+    - name: "paperclip libraries"
+      files:
+        # These licenses are paperclip specific so inject them here
+        - src: "Paper/build/libs/temp/META-INF/license/"
+          dest: "/app/paperclip/META-INF/license/"
+        - src: "Paper/build/libs/temp/paperclip/libs"
+          dest: "/app/paperclip/libs"
+
+    - name: "paperclip"
+      files:
+        # Main class for paperclip
+        - src: "Paper/build/libs/temp/META-INF/MANIFEST.MF"
+          dest: "/app/META-INF/MANIFEST.MF"
+        - src: "Paper/build/libs/temp/io/papermc/paperclip/"
+          dest: "/app/io/papermc/paperclip/"
+
+    # Mojang unmodified server
+    - name: "vanilla"
+      files:
+        # Download source with checksum
+        - src: "Paper/build/libs/temp/META-INF/download-context"
+          dest: "/app/META-INF/download-context"
+        # Distributed version file from vanilla server
+        - src: "Paper/build/libs/temp/version.json"
+          dest: "/app/version.json"
+        # Force permission on work dir, because JIB resets the permission for all parent libraries on copy
+        # if not set by JIB itself
+        # https://github.com/GoogleContainerTools/jib/issues/1257
+        - src: "Paper/build/libs/temp/dummy"
+          dest: "/home/nonroot/"
+          properties:
+            # UID/GID of nonroot user
+            user: "65532"
+            group: "65532"
+            # Only give read and write permission
+            filePermissions: "644"
+            # Paperclip complains otherwise about the already existing cache folder
+            directoryPermissions: "744"
+        # This file will be again root owned
+        - src: "Paper/.gradle/caches/paperweight/taskCache/downloadServerJar.jar"
+          dest: "/home/nonroot/cache/mojang_${MC_VERSION}.jar"
+
+    - name: "libraries"
+      files:
+        - src: "Paper/build/libs/temp/META-INF/libraries/"
+          dest: "/app/META-INF/libraries/"
+        - src: "Paper/build/libs/temp/META-INF/libraries.list"
+          dest: "/app/META-INF/libraries.list"
+
+    - name: "application"
+      files:
+        # Server specific main class
+        - src: "Paper/build/libs/temp/META-INF/main-class"
+          dest: "/app/META-INF/main-class"
+        # Server patch file
+        - src: "Paper/build/libs/temp/META-INF/versions/"
+          dest: "/app/META-INF/versions/"
+        # Checksums?
+        - src: "Paper/build/libs/temp/META-INF/patches.list"
+          dest: "/app/META-INF/patches.list"

@@ -80,6 +80,7 @@ jobs:
           # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
           # or in transport modifications (MITM)
           echo "$JIB_CHECKSUM" "jib-jre-$JIB_VERSION.zip" | sha256sum --check -
+          unzip "jib-jre-$JIB_VERSION.zip"
 
       - name: Patch and build
         run: |
@@ -104,38 +105,21 @@ jobs:
           # Extract the latest digest to include it in the metadata for reproducibility
           # Skopeo enables us to extract the data without pulling the image and having the correct
           # platform/architecture select. JIB will later download the image and uses it's own caching system
-          echo "DIGEST=sha256:ded834a82e05408ecc5edac97120f7c48d61e94cb3ec26cc44e8f711d20b00f0" >> "$GITHUB_ENV"
-          #echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq --raw-output '.Digest' | grep --extended-regexp "sha256:[a-z0-9]{64}")" >> "$GITHUB_ENV"
+          #echo "DIGEST=sha256:ded834a82e05408ecc5edac97120f7c48d61e94cb3ec26cc44e8f711d20b00f0" >> "$GITHUB_ENV"
+          echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq --raw-output '.Digest' | grep --extended-regexp "sha256:[a-z0-9]{64}")" >> "$GITHUB_ENV"
 
-      - name: Import layer layout
-        # Use Spring boots layers.idx file to separate libraries, vanilla server, etc manually
-        # https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3
+      - name: Extract jar
         run: |
-          jar uf Paper/build/libs/paper-paperclip*.jar BOOT-INF
+          unzip Paper/build/libs/paper-paperclip*.jar -d Paper/build/libs/temp
+          # Create dummy directory for the permission bug in JIB
+          mkdir Paper/build/libs/temp/dummy
 
       - name: Build Container
-        # Labels with respect to: https://github.com/opencontainers/image-spec/blob/main/annotations.md
-        # Paper is licensed under GPL 3 and MIT but not dual licensed (strictly and not or):
-        # https://github.com/PaperMC/Paper/blob/master/LICENSE.md
         run: |
-          ./jib-"$JIB_VERSION"/bin/jib jar \
-            --from="$BASE_IMAGE@$DIGEST" \
-            --environment-variables JDK_JAVA_OPTIONS="$JVM_FLAGS" \
-            --expose=25565 \
-            --labels=org.opencontainers.image.created="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-            --labels=org.opencontainers.image.authors="games647" \
-            --labels=org.opencontainers.image.url="https://github.com/games647/PaperBox" \
-            --labels=org.opencontainers.image.documentation="https://github.com/games647/PaperBox/blob/main/README.md" \
-            --labels=org.opencontainers.image.source="https://github.com/games647/PaperBox" \
-            --labels=org.opencontainers.image.version="$MC_VERSION" \
-            --labels=org.opencontainers.image.revision="$REVISION" \
-            --labels=org.opencontainers.image.vendor="games647" \
-            --labels=org.opencontainers.image.license="GPL-3.0-or-later and MIT" \
-            --labels=org.opencontainers.image.title="PaperMC Minecraft server" \
-            --labels=org.opencontainers.image.description="Paper server implementation of the Minecraft server" \
-            --labels=org.opencontainers.image.base.digest="$DIGEST" \
-            --labels=org.opencontainers.image.base.name="$BASE_IMAGE" \
-            --program-args=--nogui \
-            --entrypoint="java -cp /app io.papermc.paperclip.Main" \
+          export CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          # Create build file from an allow list of variables
+          # Note the variables are not expanded here - see ' instead of "
+          envsubst '$BASE_IMAGE:$DIGEST:$CREATED:$JVM_FLAGS:$REVISION:$MC_VERSION' < abstract-jib.yaml > jib.yaml 
+          ./jib-"$JIB_VERSION"/bin/jib build \
             --additional-tags="$MC_VERSION" \
-            --target docker://ghcr.io/games647/paperclip Paper/build/libs/paper-paperclip*.jar
+            --target docker://ghcr.io/games647/paperclip
