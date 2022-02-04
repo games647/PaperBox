@@ -98,14 +98,14 @@ jobs:
         run: |
           echo "Extracting versions"
           # Extract the Minecraft version
-          echo "MC_VERSION=$(grep --perl-regexp --only-matching '(?<=mcVersion=)[0-9\.]*' Paper/gradle.properties)" >> "$GITHUB_ENV"
+          echo "MC_VERSION=$(grep --perl-regexp --only-matching '(?<=mcVersion=)[0-9]\.[0-9]{2}(\.[0-9]{1,2})?' Paper/gradle.properties)" >> "$GITHUB_ENV"
           # Extract the Paper source code revision
-          echo "REVISION=$(git -C Paper/ rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "REVISION=$(git -C Paper/ rev-parse --short HEAD | grep --extended-regexp "[0-9a-z]{4,56}")" >> "$GITHUB_ENV"
           # Extract the latest digest to include it in the metadata for reproducibility
           # Skopeo enables us to extract the data without pulling the image and having the correct
           # platform/architecture select. JIB will later download the image and uses it's own caching system
           echo "DIGEST=sha256:ded834a82e05408ecc5edac97120f7c48d61e94cb3ec26cc44e8f711d20b00f0" >> "$GITHUB_ENV"
-          #echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq -r '.Digest')" >> "$GITHUB_ENV"
+          #echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq --raw-output '.Digest' | grep --extended-regexp "sha256:[a-z0-9]{64}")" >> "$GITHUB_ENV"
 
       - name: Import layer layout
         # Use Spring boots layers.idx file to separate libraries, vanilla server, etc manually
