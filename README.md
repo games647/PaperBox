@@ -71,14 +71,17 @@ the following steps:
 
 Creating the following image layer layout:
 
-| Layer | Implementation                     | Ideal              |
-|-------|------------------------------------|--------------------|
-| -     | Base Image                         | Base image         |
-| 1     | Paperclip libraries                | Libraries          |
-| 2     | Paperclip classes                  | Snapshot libraries |
-| 3     | Vanilla server                     | Vanilla server     |
-| 4     | Server libraries (incl. Paper-API) | Paper API          |
-| 5     | Server patch                       | Sever patch        |
+| Layer | Implementation                     | Ideal?                                      |
+|-------|------------------------------------|---------------------------------------------|
+| -     | Base Image                         | Base image                                  |
+| 1     | Paperclip libraries                | Paperclip libraries                         |
+| 2     | Paperclip classes                  | Paperclip classes                           |
+| 3     | Vanilla server                     | Vanilla server                              |
+| 4     | Server libraries (incl. Paper-API) | Libraries                                   |
+| 5     | Server patch                       | Snapshot libraries                          |
+| 6     | -                                  | Module dependencies (Paper-API, Mojang-API) | 
+| 7     | -                                  | Static files                                |
+| 8     | -                                  | Sever patch                                 |
 
 Meanwhile, the [recommended](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#how-are-jib-applications-layered) 
 setup by JIB includes the right side, because snapshot libraries are updated more often.
