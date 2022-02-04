@@ -91,6 +91,8 @@ jobs:
           ./gradlew applyPatches --exclude-task test --exclude-task check --stacktrace
           # Create a full paperclip build
           ./gradlew createReobfPaperclipJar --exclude-task test --exclude-task check --stacktrace
+          # stop daemon if both tasks are finished
+          ./gradlew --stop
 
       - name: Extract vars
         run: |
