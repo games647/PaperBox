@@ -22,11 +22,6 @@ something custom. Ideal would be the usage of a JIB Gradle task to automatically
 and include a modified version of `paperweight` to create a diff, but skipping the jar and shadowing step. It seems
 there is no such solution as of now.
 
-## Alternative Tools
-
-* [Dockerfile Maven](https://github.com/spotify/dockerfile-maven)
-* [Buildpacks](https://github.com/paketo-buildpacks/executable-jar)
-
 ## Features
 
 * Offline
@@ -107,6 +102,16 @@ implementation needs to be patched.
 However, Paperclip supports patch-only start, which you could use to warm up the container. You can specify the
 parameter using `-Dpaperclip.patchonly=true`.
 [ref](https://github.com/PaperMC/Paperclip/blob/dcd86a9faf4ee82b434bcf26a8e4b2dd4eb39c87/java17/src/main/java/io/papermc/paperclip/Paperclip.java)
+
+## Alternative Tools
+
+* [Dockerfile Maven](https://github.com/spotify/dockerfile-maven)
+* [Buildpacks](https://github.com/paketo-buildpacks/executable-jar)
+    * Includes advanced features like:
+      * rebasing of base images
+      * SBOM
+      * Memory Calculator on startup
+      * `MALLOC_ARENA_MAX` according to active processor count to help memory consumption
 
 ## Differences to other OCI/Container approaches
 
