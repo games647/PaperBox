@@ -59,10 +59,12 @@ the following steps:
 
 1. Download Paper
 2. Create a Paperclip version
-3. Package `layers.idx` into the jar to specify the layers manually
-   * Based on [Spring Boot]( https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3)
-   * JIB Feature: https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#exploded-mode-recommended-1
-4. Invoke the JIB-CLI tool to build the container
+3. Extract the jar version
+4. Separate the folders into different layers
+   1. Earlier version used `layers.idx` from 
+   [Spring](https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3)
+   2. However, this doesn't support including the vanilla jar in an arbitrary location
+6. Invoke the JIB-CLI tool to build the container
 
 Creating the following image layer layout:
 
