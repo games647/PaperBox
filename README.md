@@ -64,7 +64,7 @@ the following steps:
    1. Earlier version used `layers.idx` from 
    [Spring](https://spring.io/blog/2020/08/14/creating-efficient-docker-images-with-spring-boot-2-3)
    2. However, this doesn't support including the vanilla jar in an arbitrary location
-6. Invoke the JIB-CLI tool to build the container
+6. Invoke the JIB-CLI tool to build the container according to this [build file](abstract-jib.yaml)
 
 Creating the following image layer layout:
 
