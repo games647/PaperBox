@@ -105,7 +105,6 @@ jobs:
           # Extract the latest digest to include it in the metadata for reproducibility
           # Skopeo enables us to extract the data without pulling the image and having the correct
           # platform/architecture select. JIB will later download the image and uses it's own caching system
-          #echo "DIGEST=sha256:ded834a82e05408ecc5edac97120f7c48d61e94cb3ec26cc44e8f711d20b00f0" >> "$GITHUB_ENV"
           echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq --raw-output '.Digest' | grep --extended-regexp "sha256:[a-z0-9]{64}")" >> "$GITHUB_ENV"
 
       - name: Extract jar

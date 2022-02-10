@@ -28,6 +28,9 @@ there is no such solution as of now.
   * All necessary files to run the server are already included in the image
   * Including libraries, vanilla server (patching soure) and server implementation
   * No more downloads are necessary
+* Binary patching of the server implementation on startup (`paperclip`)
+  * Faster than running through BuildTools (no decompile, patch, recompile)
+  * Distributing the server implementation could be against the GPL
 * Minimal: only 300 MiB vs 450 MiB (`felixklauke/paperspigot`) or 800 MiB (`itzg/minecraft-server`)
   * No unnecessary packages like `dos2unix` or `nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
   * Based on the distroless base image
@@ -38,8 +41,6 @@ there is no such solution as of now.
 * Tons of metadata labels
   * Including base image digest label
 * Required EULA acceptance - make this decision transparent to the user
-* Binary patching of the server implementation on startup
-  * Distributing the server implementation could be against the GPL
 
 ## Concept
 
