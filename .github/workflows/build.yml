@@ -4,13 +4,12 @@
 # Human-readable name in the actions tab
 name: Java CI
 
-# Build on every pull request regardless of the branch
+# Build on every push
 # Wiki: https://help.github.com/en/actions/reference/events-that-trigger-workflows
 on:
+  # Allow manual dispatches
+  workflow_dispatch:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
