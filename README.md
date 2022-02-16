@@ -37,6 +37,7 @@ there is no such solution as of now.
     * Reduced attack surface and image size
     * No shell or package manager
 * Rootless user (is that really a feature? it should be standard)
+* Customizable java flags
 * Cache-optimized layer layout
 * Tons of metadata labels
   * Including base image digest label
@@ -145,8 +146,8 @@ explicitly to make it transparent to users.
 
 Running it, requires accepting the EULA. This can be specified using environment variables:
 ```shell
-docker run --env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ghcr.io/games647/paperclip:1.18.1 ...
-podman run --env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ghcr.io/games647/paperclip:1.18.1 ...
+docker run --env JAVA_TOOL_OPTIONS="-Dcom.mojang.eula.agree=true" ghcr.io/games647/paperclip:1.18.1 ...
+podman run --env JAVA_TOOL_OPTIONS="-Dcom.mojang.eula.agree=true" ghcr.io/games647/paperclip:1.18.1 ...
 ```
 
 ### Configuring
@@ -161,7 +162,7 @@ podman run --env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true" ghcr.io/games64
 * JVM Flags. The project includes the [aikar JVM](ttps://paper.readthedocs.io/en/latest/server/aikar-flags.html) flags
   by default using the `JDK_JAVA_OPTIONS` environment variable. If you want to modify or remove flags, use
   `--env JDK_JAVA_OPTIONS=...` to override it. However, if you want to add additional flags use the environment variable
-  from above like `--env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
+  from above like `--env JAVA_TOOL_OPTIONS="-Dcom.mojang.eula.agree=true -Xmx1G"`.
 * Similar remote debugging can be enabled using the following parameters:
   `--env JDK_JAVA_OPTIONS="-Dcom.mojang.eula.agree=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005"`
 
