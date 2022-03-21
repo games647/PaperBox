@@ -50,28 +50,36 @@ layers:
     - name: "paperclip libraries"
       files:
         # These licenses are paperclip specific so inject them here
-        - src: "Paper/build/libs/temp/META-INF/license/"
+        - src: "Paper/build/libs/temp/clip/META-INF/license/"
           dest: "/app/paperclip/META-INF/license/"
-        - src: "Paper/build/libs/temp/paperclip/libs"
+        - src: "Paper/build/libs/temp/clip/paperclip/libs"
           dest: "/app/paperclip/libs"
 
     - name: "paperclip"
       files:
         # Main class for paperclip
-        - src: "Paper/build/libs/temp/META-INF/MANIFEST.MF"
+        - src: "Paper/build/libs/temp/clip/META-INF/MANIFEST.MF"
           dest: "/app/META-INF/MANIFEST.MF"
-        - src: "Paper/build/libs/temp/io/papermc/paperclip/"
+        - src: "Paper/build/libs/temp/clip/io/papermc/paperclip/"
           dest: "/app/io/papermc/paperclip/"
 
     # Mojang unmodified server
     - name: "vanilla"
       files:
         # Download source with checksum
-        - src: "Paper/build/libs/temp/META-INF/download-context"
+        - src: "Paper/build/libs/temp/clip/META-INF/download-context"
           dest: "/app/META-INF/download-context"
         # Distributed version file from vanilla server
-        - src: "Paper/build/libs/temp/version.json"
+        - src: "Paper/build/libs/temp/clip/version.json"
           dest: "/app/version.json"
+        # This file will be again root owned
+        - src: "Paper/.gradle/caches/paperweight/taskCache/downloadServerJar.jar"
+          dest: "/home/nonroot/cache/mojang_${MC_VERSION}.jar"
+
+    - name: "libraries"
+      files:
+        - src: "Paper/build/libs/temp/clip/META-INF/libraries.list"
+          dest: "/app/META-INF/libraries.list"
         # Force permission on work dir, because JIB resets the permission for all parent libraries on copy
         # if not set by JIB itself
         # https://github.com/GoogleContainerTools/jib/issues/1257
@@ -81,29 +89,29 @@ layers:
             # UID/GID of nonroot user
             user: "65532"
             group: "65532"
-            # Only give read and write permission
-            filePermissions: "644"
             # Paperclip complains otherwise about the already existing cache folder
             directoryPermissions: "744"
-        # This file will be again root owned
-        - src: "Paper/.gradle/caches/paperweight/taskCache/downloadServerJar.jar"
-          dest: "/home/nonroot/cache/mojang_${MC_VERSION}.jar"
-
-    - name: "libraries"
-      files:
-        - src: "Paper/build/libs/temp/META-INF/libraries/"
-          dest: "/app/META-INF/libraries/"
-        - src: "Paper/build/libs/temp/META-INF/libraries.list"
-          dest: "/app/META-INF/libraries.list"
+        - src: "Paper/build/libs/temp/bundler/META-INF/libraries/"
+          dest: "/home/nonroot/libraries"
+          properties:
+            # UID/GID of nonroot user
+            user: "65532"
+            group: "65532"
+            # Only give read of the given files
+            filePermissions: "444"
+            directoryPermissions: "744"
+          includes:
+            - '**/*.jar'
+            - '**/*.patch'
 
     - name: "application"
       files:
         # Server specific main class
-        - src: "Paper/build/libs/temp/META-INF/main-class"
+        - src: "Paper/build/libs/temp/clip/META-INF/main-class"
           dest: "/app/META-INF/main-class"
         # Server patch file
-        - src: "Paper/build/libs/temp/META-INF/versions/"
+        - src: "Paper/build/libs/temp/clip/META-INF/versions/"
           dest: "/app/META-INF/versions/"
         # Checksums?
-        - src: "Paper/build/libs/temp/META-INF/patches.list"
+        - src: "Paper/build/libs/temp/clip/META-INF/patches.list"
           dest: "/app/META-INF/patches.list"

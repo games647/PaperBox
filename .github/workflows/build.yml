@@ -105,15 +105,18 @@ jobs:
           # Skopeo enables us to extract the data without pulling the image and having the correct
           # platform/architecture select. JIB will later download the image and uses it's own caching system
           echo "DIGEST=$(skopeo inspect docker://""$BASE_IMAGE"" | jq --raw-output '.Digest' | grep --extended-regexp "sha256:[a-z0-9]{64}")" >> "$GITHUB_ENV"
+          #echo "DIGEST=sha256:ec587f786019d4e5226f6f8c7485ca1ef5df6fd7f029ed1cffa8466c91d84fc4" >> $GITHUB_ENV
 
       - name: Extract jar
         run: |
-          unzip Paper/build/libs/paper-paperclip*.jar -d Paper/build/libs/temp
           # Create dummy directory for the permission bug in JIB
-          mkdir Paper/build/libs/temp/dummy
+          mkdir -p Paper/build/libs/temp/dummy
+          unzip Paper/build/libs/paper-paperclip*.jar -d Paper/build/libs/temp/clip
+          unzip Paper/build/libs/paper-bundler*.jar -d Paper/build/libs/temp/bundler
 
       - name: Build Container
         run: |
+          apt update && apt install gettext-base
           export CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           # Create build file from an allow list of variables
           # Note the variables are not expanded here - see ' instead of "
