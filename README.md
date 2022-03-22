@@ -31,6 +31,7 @@ there is no such solution as of now.
 * Binary patching of the server implementation on startup (`paperclip`)
   * Faster than running through BuildTools (no decompile, patch, recompile)
   * Distributing the server implementation could be against the GPL
+* Disabled file logging to prefer container logging
 * Minimal: only 300 MiB vs 450 MiB (`felixklauke/paperspigot`) or 800 MiB (`itzg/minecraft-server`)
   * No unnecessary packages like `dos2unix` or `nano` ([ref](https://github.com/itzg/docker-minecraft-server/blob/8f8acc40f5a779c8cc3b0de4909a0e41894d7218/Dockerfile#L21))
   * Based on the distroless base image

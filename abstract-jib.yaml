@@ -35,6 +35,7 @@ exposedPorts:
 
 entrypoint:
   - "java"
+  - "-Dlog4j.configurationFile=log4j-without-file-logging.xml"
   - "-cp"
   - "/app"
   - "io.papermc.paperclip.Main"
@@ -91,6 +92,8 @@ layers:
             group: "65532"
             # Paperclip complains otherwise about the already existing cache folder
             directoryPermissions: "744"
+        - src: "log4j-without-file-logging.xml"
+          dest: "/home/nonroot/log4j-without-file-logging.xml"
         - src: "Paper/build/libs/temp/bundler/META-INF/libraries/"
           dest: "/home/nonroot/libraries"
           properties:
