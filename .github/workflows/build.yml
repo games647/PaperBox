@@ -79,7 +79,7 @@ jobs:
           # Security: verify the checksum with a pre-downloaded value to detect arbitary artifact replacement
           # or in transport modifications (MITM)
           echo "$JIB_CHECKSUM" "jib-jre-$JIB_VERSION.zip" | sha256sum --check -
-          unzip "jib-jre-$JIB_VERSION.zip"
+          unzip -f "jib-jre-$JIB_VERSION.zip"
 
       - name: Patch and build
         run: |
