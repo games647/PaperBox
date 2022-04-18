@@ -18,9 +18,9 @@ env:
   JDK_DISTRIBUTION: 'temurin'
   JAVA_VERSION: 17
 
-  JIB_VERSION: '0.9.0'
+  JIB_VERSION: '0.10.0'
   JIB_CLI_DOWNLOAD: "https://github.com/GoogleContainerTools/jib/releases/download/v${{ env.JIB_VERSION }}-cli/jib-jre-${{ env.JIB_VERSION }}.zip"
-  JIB_CHECKSUM: 'c0f47017f1218a223f51228cc69fe9d7793e600d8a05b11e4dbdba0dee6bfc11'
+  JIB_CHECKSUM: '1b48fd04e73573bbf902c85dc1019c38ea4968dc0dbac4eb0658a2650ca5a18e'
 
   BASE_IMAGE: 'gcr.io/distroless/java17-debian11:nonroot'
 
